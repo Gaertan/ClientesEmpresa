@@ -19,7 +19,7 @@ public class Cliente {
 	
 	public Cliente(String nombre, String dni, String correo, String telefono, Date fechaNacimiento) {
 		super();
-		this.nombre = nombre;
+		this.nombre = formateaNombre(nombre);
 		this.dni = dni;
 		this.correo = correo;
 		this.telefono = telefono;
@@ -101,7 +101,15 @@ public class Cliente {
 	}
 
 
-	public void setDni(String dni) {
+	public void setDni(String dni) throws Exception {
+		String dni1 = dni;
+		dni1.replaceAll("\\W","");
+		dni1.toUpperCase();
+		if(dni1.length()!= 9||!comprobarLetraDni(dni1)) {throw new Exception();}
+		
+		
+		
+		
 		this.dni = dni;
 	}
 
@@ -152,13 +160,9 @@ public class Cliente {
 		if (getClass() != obj.getClass())
 			return false;
 		Cliente other = (Cliente) obj;
-		return Objects.equals(ER_CORREO, other.ER_CORREO) && Objects.equals(ER_DNI, other.ER_DNI)
-				&& Objects.equals(ER_TELEFONO, other.ER_TELEFONO) && Objects.equals(FORMATO_FECHA, other.FORMATO_FECHA)
-				&& Objects.equals(correo, other.correo) && Objects.equals(dni, other.dni)
-				&& Objects.equals(fechaNacimiento, other.fechaNacimiento) && Objects.equals(nombre, other.nombre)
-				&& Objects.equals(telefono, other.telefono);
+		return Objects.equals(dni, other.dni);
+
 	}
-	
 	
 	
 	
