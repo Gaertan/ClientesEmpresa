@@ -17,7 +17,7 @@ public class Consola {
 	
 	private void Consola(){}
 
-	public Opcion elegirOpcion() {
+	public static Opcion elegirOpcion() {
 		mostrarMenu();
 		int opcion = -1;
 
@@ -54,7 +54,7 @@ public class Consola {
 	
 	
 	
-	public Cliente leerCliente() {
+	public static Cliente leerCliente() {
 		String nombre = "a";
 		String correo = "a";
 		String dni = "a";
@@ -88,7 +88,7 @@ public class Consola {
 	
 	
 	
-	public Cliente leerClienteDni() {
+	public static Cliente leerClienteDni() {
 	    String dni = null;	
 	System.out.println("Introduzca un dni con formato correcto,si no lo es,se seguira pidiendo.;");
 	Pattern pattern2 = Pattern.compile("[0-9]{7,8}[A-Z a-z]");
@@ -104,7 +104,7 @@ public class Consola {
 
 	
 	
-	public Date leerFechaNacimiento() {
+	public static Date leerFechaNacimiento() {
 		boolean fechaCorrecta=false;
 		int dia = -1;
 		int mes = -1;
@@ -133,7 +133,7 @@ public class Consola {
 	
 	
 	
-	public void mostrarMenu() {
+	public static void mostrarMenu() {
 		System.out.println("Estas son las opciones que puede escoger;escoja la opción correspondiente");
 		System.out.println("1. insertar");
 		System.out.println("2. Buscar");
