@@ -2,16 +2,17 @@ package org.iesalandalus.programacion.clientesempresa.modelo.dominio;
 
 import java.sql.Date;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Objects;
 
 import javax.naming.OperationNotSupportedException;
 
 public class Cliente {
-	private String ER_CORREO;
-	private String ER_DNI;
-	private String ER_TELEFONO;
-	public String FORMATO_FECHA;
+	private String ER_CORREO = "\\w+(?:\\.\\w+)*@\\w+\\.\\w{2,5}";
+	private String ER_DNI = "\\d{8}[A-Za-z]";
+	private String ER_TELEFONO = "\\d{9}";
+	public static final DateTimeFormatter FORMATO_FECHA = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 	private String nombre;
 	private String dni;
 	private String correo;
@@ -21,30 +22,25 @@ public class Cliente {
 	
 	
 	
-	public Cliente(String nombre, String dni, String correo, String telefono, LocalDate fechaNacimiento) {
-
-		try{
-			if(nombre!=null&&nombre!="")this.nombre = formateaNombre(nombre);
-		if(dni!=null&&dni!="")setDni(dni);
-		//if(correo!=null&&correo!="")setCorreo(correo);
+	public Cliente(String nombre, String dni, String correo, String telefono, LocalDate fechaNacimiento) throws Exception {
+		setNombre(nombre);
+		setDni(dni);
 		setCorreo(correo);
-		if(telefono!=null&&telefono!="")setTelefono(telefono);
-		if(fechaNacimiento!=null)setFechaNacimiento(fechaNacimiento);}
-		catch(Exception e) {e.printStackTrace();}
+		setTelefono(telefono);
+		setFechaNacimiento(fechaNacimiento);
+	} 
+
+
+	public Cliente(Cliente cliente) {
+		if (cliente == null) {
+			throw new NullPointerException("ERROR: No es posible copiar un cliente nulo.");
+		}
+		this.nombre = cliente.getNombre();
+		this.dni = cliente.getDni();
+		this.correo = cliente.getCorreo();
+		this.telefono = cliente.getTelefono();
+		this.fechaNacimiento = cliente.getFechaNacimiento();
 	}
-
-
-
-	public Cliente(Cliente cliente) throws Exception {
-		if (cliente==null) throw new NullPointerException("ERROR: No es posible copiar un cliente nulo.");
-		else{
-			setNombre(cliente.nombre);
-			setDni(cliente.dni);
-			setCorreo(cliente.correo);
-			setTelefono(cliente.telefono);
-			setFechaNacimiento(cliente.fechaNacimiento);}	
-	}
-
 
 
 	private String formateaNombre(String nombre) {
@@ -108,7 +104,7 @@ public class Cliente {
 		String dni1 = dni;
 		dni1.replaceAll("\\W","");
 		dni1.toUpperCase();
-		if (!dni1.matches("\\d{8}[A-Za-z]")) {throw new IllegalArgumentException("El formato del dni no es correcto.");}		
+		if (!dni1.matches(ER_DNI)) {throw new IllegalArgumentException("El formato del dni no es correcto.");}		
 		if(!comprobarLetraDni(dni1)) {throw new Exception("la letra del dni no es la correcta");}		
 		this.dni = dni1;
 	}
@@ -119,13 +115,9 @@ public class Cliente {
 	}
 
 
-	public void setCorreo(String correo) {
-		if (correo == null) {
-			throw new IllegalArgumentException("El correo no puede ser nulo.");
-		}
-		if (!correo.matches("\\w+(?:\\.\\w+)*@\\w+\\.\\w{2,5}")) {
-			throw new IllegalArgumentException("El formato del correo no es correcto.");
-		}
+	public void setCorreo(String correo) throws Exception{
+		if (correo == null) {throw new NullPointerException("ERROR: El correo de un cliente no puede ser nulo.");}
+		if (!correo.matches(ER_CORREO)) {throw new IllegalArgumentException("ERROR: El correo del cliente no tiene un formato válido.");		}
 		this.correo = correo;
 	}
 
@@ -136,8 +128,8 @@ public class Cliente {
 
 
 	public void setTelefono(String telefono) {
-		if (telefono == null) {throw new IllegalArgumentException("El teléfono no puede ser nulo.");}
-		if (!telefono.matches("\\d{9}")) {throw new IllegalArgumentException("El formato del teléfono no es correcto.");}
+		if (telefono == null) {throw new NullPointerException("ERROR: El teléfono de un cliente no puede ser nulo.");}
+		if (!telefono.matches(ER_TELEFONO)) {throw new IllegalArgumentException("ERROR: El teléfono del cliente no tiene un formato válido.");}
 		this.telefono = telefono;
 	}
 
@@ -173,7 +165,11 @@ public class Cliente {
 
 	}
 	
-	
+	@Override
+	public String toString() {
+		return "nombre=" + nombre + " (" + getIniciales() + ")" + ", DNI=" + dni + ", correo=" + correo + ", teléfono="
+				+ telefono + ", fecha nacimiento=" + fechaNacimiento.format(FORMATO_FECHA);
+	}
 	
 
 }
