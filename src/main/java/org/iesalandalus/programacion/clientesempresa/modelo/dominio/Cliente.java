@@ -4,6 +4,7 @@ import java.sql.Date;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.Locale;
 import java.util.Objects;
 
 import javax.naming.OperationNotSupportedException;
@@ -22,7 +23,7 @@ public class Cliente {
 	
 	
 	
-	public Cliente(String nombre, String dni, String correo, String telefono, LocalDate fechaNacimiento) throws Exception {
+	public Cliente(String nombre, String dni, String correo, String telefono, LocalDate fechaNacimiento) {
 		setNombre(nombre);
 		setDni(dni);
 		setCorreo(correo);
@@ -44,18 +45,24 @@ public class Cliente {
 
 
 	private String formateaNombre(String nombre) {
+		nombre = nombre.toLowerCase(Locale.ROOT);
 		//separa la string cuando encuentra cualquier tipo de espacio/separador
 
 		String nombreRoto[] = nombre.split("\\s+");		
-		  for(String nomb:nombreRoto) {
-			  //recorre el array de nombres y/o apellidos,elimina los espacios restantes y los reemplaza por vacíos
-  		nomb.replaceAll("\\s\\W","");
-  		nomb.toLowerCase();
-  		nomb.toUpperCase().charAt(0);}
+		  for(int i = 0;i<nombreRoto.length;i++) {
+			  nombreRoto[i].replaceAll("\\s\\W","");
+			  try {
+				  nombreRoto[i].trim();
+		//deshace la string en el primer caracter y el resto,lo pasa a mayus y la vuelve a juntar
+				  String palabra = nombreRoto[i].substring(nombreRoto[i].indexOf(" ") + 1);
+				  palabra = Character.toUpperCase(palabra.charAt(0)) + palabra.substring(1);
+				  if(palabra!=" ")nombreRoto[i] = palabra;}		  
+			  catch(Exception e) {}
+		  }		
 		  //crea una nueva String uniendo los elementos de la arraay separados por un espacio
 		 String resultado = String.join(" ", nombreRoto);
 		 
-		 return resultado;
+		 return resultado.trim();
 	}
 	
 	
@@ -87,8 +94,9 @@ public class Cliente {
 	}
 
 
-	public void setNombre(String nombre) throws OperationNotSupportedException {
-		if ( nombre==null ||nombre== "") {throw new OperationNotSupportedException("el nombre no puede ser nulo");}
+	public void setNombre(String nombre) {
+		if (nombre == null) {throw new NullPointerException("ERROR: El nombre de un cliente no puede ser nulo.");}
+		if (nombre.trim().isEmpty()) {throw new IllegalArgumentException("ERROR: El nombre de un cliente no puede estar vacío.");}
 		this.nombre = formateaNombre(nombre);
 	}
 
@@ -99,13 +107,13 @@ public class Cliente {
 	}
 
 
-	public void setDni(String dni) throws Exception {
-		if (dni == null) {throw new IllegalArgumentException("El dni no puede ser nulo.");}
+	public void setDni(String dni){
+		if (dni == null) {throw new NullPointerException("ERROR: El dni de un cliente no puede ser nulo.");}
 		String dni1 = dni;
 		dni1.replaceAll("\\W","");
 		dni1.toUpperCase();
-		if (!dni1.matches(ER_DNI)) {throw new IllegalArgumentException("El formato del dni no es correcto.");}		
-		if(!comprobarLetraDni(dni1)) {throw new Exception("la letra del dni no es la correcta");}		
+		if (!dni1.matches(ER_DNI)) {throw new IllegalArgumentException("ERROR: El dni del cliente no tiene un formato válido.");}		
+		if(!comprobarLetraDni(dni1)) {throw new IllegalArgumentException("ERROR: La letra del dni del cliente no es correcta.");}		
 		this.dni = dni1;
 	}
 
@@ -115,7 +123,7 @@ public class Cliente {
 	}
 
 
-	public void setCorreo(String correo) throws Exception{
+	public void setCorreo(String correo){
 		if (correo == null) {throw new NullPointerException("ERROR: El correo de un cliente no puede ser nulo.");}
 		if (!correo.matches(ER_CORREO)) {throw new IllegalArgumentException("ERROR: El correo del cliente no tiene un formato válido.");		}
 		this.correo = correo;
@@ -140,7 +148,7 @@ public class Cliente {
 
 
 	private void setFechaNacimiento(LocalDate fechaNacimiento2) {	
-		if (fechaNacimiento2 == null) {throw new IllegalArgumentException("La fecha de nacimiento no puede ser nula.");}
+		if (fechaNacimiento2 == null) {throw new NullPointerException("ERROR: La fecha de nacimiento de un cliente no puede ser nula.");}
 		this.fechaNacimiento = fechaNacimiento2;
 	}
 
