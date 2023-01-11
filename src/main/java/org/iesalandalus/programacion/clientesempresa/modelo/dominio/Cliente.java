@@ -10,7 +10,7 @@ import java.util.Objects;
 import javax.naming.OperationNotSupportedException;
 
 public class Cliente {
-	private String ER_CORREO = "\\w+(?:\\.\\w+)*@\\w+\\.\\w{2,5}";
+	private String ER_CORREO = "^([0-9a-zA-Z]+[-._+&])*[0-9a-zA-Z]+@([-0-9a-zA-Z]+[.])+[a-zA-Z]{2,6}$";
 	private String ER_DNI = "\\d{8}[A-Za-z]";
 	private String ER_TELEFONO = "\\d{9}";
 	public static final DateTimeFormatter FORMATO_FECHA = DateTimeFormatter.ofPattern("dd/MM/yyyy");

@@ -79,23 +79,22 @@ public void borrar(Cliente cliente) throws OperationNotSupportedException {
 }
 
 
+
 public Cliente buscar(Cliente cliente) {
 	if (cliente == null) {throw new NullPointerException("ERROR: No se puede buscar un cliente nulo.");}
 	Cliente cliente2 = null;
 	for(int i=0; i<capacidad;i++)
-		{if(cliente.equals(coleccionClientes[i])) {cliente2 = new Cliente(cliente);}
+		{if(cliente.equals(coleccionClientes[i])) {cliente2 = new Cliente(coleccionClientes[i]);}
 	}
 	return cliente2;
 }
 
 private void desplazarUnaPosicionHaciaIzquierda(int indice) {
-	
-	for(int i = indice; i < capacidad; i++) {
-		coleccionClientes[i] = coleccionClientes[(i+1)];		
+	int i;
+	for (i = indice; i < coleccionClientes.length - 1; i++) {
+		coleccionClientes[i] = coleccionClientes[i + 1];
 	}
-	coleccionClientes[indice] = null;if (tamano>0)tamano--;
-}
-
+	coleccionClientes[i] = null;tamano--;}
 
 
 }

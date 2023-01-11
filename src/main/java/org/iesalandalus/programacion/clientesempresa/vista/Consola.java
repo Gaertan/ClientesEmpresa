@@ -59,44 +59,62 @@ public class Consola {
 		String correo = "a";
 		String dni = "a";
 		String telefono ="a";
-		Date fechaNacimiento;
+		LocalDate fechaNacimiento;
+		boolean fail = true;
+		Cliente cliente = null;
 		
-		System.out.println("Introduzca los siguientes datos del cliente:");
-		System.out.println("Introduzca el nombre y apellidos;");
-        String[] palabras = nombre.split("\\s+");
-		while(palabras.length<2) {System.out.println("Introduzca el nombre;");nombre=Entrada.cadena();}
+		do {
+			fail = false;
+			System.out.println("Introduzca los siguientes datos del cliente:");
+			
+	        String[] palabras = nombre.split("\\s+");
+	        do {System.out.println("Introduzca el nombre y apellidos;");
+	        nombre=Entrada.cadena(); palabras = nombre.split("\\s+");}
+			while(palabras.length<2);
+			
+	        do{
+				System.out.println("Introduzca el correo;");
+				correo = Entrada.cadena();}
+				while(!correo.matches("^[\\w!#$%&'*+/=?`{|}~^-]+(?:\\.[\\w!#$%&'*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}"));
+			
+			do {
+				System.out.println("Introduzca un dni correcto;");
+				dni = Entrada.cadena();}
+				while(!dni.matches("[0-9]{7,8}[A-Z a-z]"));
+				
+			do {System.out.println("Introduzca un telefono correcto(numeros sin mas caracteres);");
+				telefono = Entrada.cadena();}
+				while(!telefono.matches("^[0-9]{9}$"));
+				
+			fechaNacimiento = leerFechaNacimiento();
+			
+			try {cliente = new Cliente(nombre, dni, correo, telefono, fechaNacimiento);	} catch (Exception e) {fail = true;e.printStackTrace();}
+		}
+		while(fail);
 		
-		System.out.println("Introduzca el correo;");
-        String regex = "^[\\w!#$%&'*+/=?`{|}~^-]+(?:\\.[\\w!#$%&'*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}";  
-        Pattern pattern = Pattern.compile(regex);  
-        Matcher matcher = pattern.matcher(correo);  
-		while(!matcher.matches()) {correo = Entrada.cadena();}
-		
-		System.out.println("Introduzca un dni correcto;");
-		Pattern pattern2 = Pattern.compile("[0-9]{7,8}[A-Z a-z]");
-        Matcher matcher2 = pattern2.matcher(dni);  
-		while(!matcher2.matches()) {dni = Entrada.cadena();}
-		
-		System.out.println("Introduzca un telefono correcto(numeros sin mas caracteres);");
-		Pattern pattern3 = Pattern.compile("^[0-9]{10}$");
-        Matcher matcher3 = pattern3.matcher(telefono);  
-		while(!matcher3.matches()) {dni = Entrada.cadena();}
-		
-		fechaNacimiento = leerFechaNacimiento();
-		
-		return new  Cliente(nombre,  dni,  correo,  telefono,  fechaNacimiento);}
+		return cliente;
+}
 	
 	
 	
 	public static Cliente leerClienteDni() {
-	    String dni = null;	
-	System.out.println("Introduzca un dni con formato correcto,si no lo es,se seguira pidiendo.;");
-	Pattern pattern2 = Pattern.compile("[0-9]{7,8}[A-Z a-z]");
+	String dni = "a";	
 
-	Matcher matcher2 = pattern2.matcher(dni);  
-	while(!matcher2.matches()) {dni = Entrada.cadena();}
+	//Pattern pattern2 = Pattern.compile("[0-9]{7,8}[A-Z a-z]");
+
+	//Matcher matcher2 = pattern2.matcher(dni);  
+	//while(matcher2.matches()) {dni = Entrada.cadena();}
+
+
+    boolean dniCorrecto = false;
+    do{System.out.println("Introduzca un dni con formato correcto,si no lo es,se seguira pidiendo.;");
+     
+        dni = Entrada.cadena();   dniCorrecto=dni.matches("[0-9]{7,8}[A-Z a-z]");
+    }while(!dniCorrecto);
+
+    System.out.println("El dni "+dni+" tiene un formato correcto");
 	
-	return new Cliente("",dni,"","",null);
+	return new Cliente("Andrés Rubio Del Río",dni,"andresrubio@iesalandalus.org","666223344",LocalDate.of(1992, 7, 3));
 
 	
 	
@@ -104,7 +122,7 @@ public class Consola {
 
 	
 	
-	public static Date leerFechaNacimiento() {
+	public static LocalDate leerFechaNacimiento() {
 		boolean fechaCorrecta=false;
 		int dia = -1;
 		int mes = -1;
@@ -112,8 +130,8 @@ public class Consola {
 		
 		while (!fechaCorrecta) {
 			System.out.println("A continuacion se le va a pedir los datos de la fecha de nacimiento;");
-			while(dia>32||dia>0) {System.out.println("Introduzca el dia;");dia =Entrada.entero();}
-			while(mes>13||mes>0) {System.out.println("Introduzca el mes;");mes =Entrada.entero();}
+			while(dia>32||dia<0) {System.out.println("Introduzca el dia;");dia =Entrada.entero();}
+			while(mes>13||mes<0) {System.out.println("Introduzca el mes;");mes =Entrada.entero();}
 			while(anio>Year.now().getValue()||anio<1920) {System.out.println("Introduzca el año;");anio =Entrada.entero();}
 				
 			
@@ -126,7 +144,7 @@ public class Consola {
 		}
 		LocalDate fecha = LocalDate.of(anio, mes, dia);
 	      
-		return java.sql.Date.valueOf(fecha);
+		return fecha;
 
 		
 	}
