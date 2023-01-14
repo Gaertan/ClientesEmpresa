@@ -112,7 +112,7 @@ public class MainApp {
 
 			
 			while(opcion!=Opcion.SALIR) {opcion = Consola.elegirOpcion();ejecutarOpcion(opcion);}
-			if(opcion!=Opcion.SALIR) {System.out.println("nos vemos");}
+			if(opcion==Opcion.SALIR) {System.out.println("nos vemos");}
 			
 		}
 		catch(Exception e) {e.printStackTrace();}
