@@ -12,23 +12,18 @@ import org.iesalandalus.programacion.clientesempresa.vista.Opcion;
 
 public class MainApp {
 	private static int NUM_MAX_CLIENTES = 10;
-	public static  Clientes clientes = new Clientes(NUM_MAX_CLIENTES);
+	public static  Clientes clientes;
 	
 	private static  void insertarCliente() {
-		
+
 		Cliente cliente = new Cliente(Consola.leerCliente());
-		if(cliente!=null) {
-			for (int i = 0; i < clientes.getTamano(); i++) {
-			if(clientes.getColeccionClientes()[i] == null) {try {
-			clientes.insertar(cliente);
-		} catch (OperationNotSupportedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}break;}}}
+		if(cliente!=null) {try {clientes.insertar(cliente);} catch (OperationNotSupportedException e) {e.printStackTrace();}}
+		}
 		
 
-		
-	}
+	
+	
+	
 	private static  void buscarCliente() {
 
 		Cliente clienteBuscar = null;
@@ -60,11 +55,19 @@ public class MainApp {
 	}
 	
 	private static void mostrarClientes() {
-		boolean empty = true;
-		for (int i = 0; i < clientes.getTamano(); i++) {if(clientes.get()[i]!=null) {empty = false;}}
+
+
+		for (int i = 0;i<clientes.getTamano(); i++) {
+		/*	if(clientes.get()[i]!=null) empty = false;
+			
+		if(empty==false) {for (int i1 = 0; i1 < clientes.getTamano(); i1++) {*/
+			
+			try{System.out.println(clientes.get()[i].toString());}
+		catch(Exception e){e.getMessage();}}//}	
+		//}
 		
-		if(empty==false) {for (int i = 0; i < clientes.getTamano(); i++) {clientes.get()[i].toString();}}
-		else {System.out.println("La colección de clientes está vacía");}
+
+		if(clientes.getTamano()<1){System.out.println("La colección de clientes está vacía");}
 		
 		
 		
@@ -73,7 +76,7 @@ public class MainApp {
 	private static void mostrarClientesFecha() {
 		boolean found = false;
 		LocalDate fechaNacimientoLeida = Consola.leerFechaNacimiento();
-		for (int i = 0; i < clientes.getTamano(); i++) {if(clientes.get()[i].getFechaNacimiento().equals(fechaNacimientoLeida)) {found = true;clientes.get()[i].toString();}}
+		for (int i = 0; i < clientes.getTamano(); i++) {if(clientes.get()[i].getFechaNacimiento().equals(fechaNacimientoLeida)) {found = true;System.out.println(clientes.get()[i].toString());}}
 		if(found==false) {System.out.println("No se han encontrado clientes con fecha coincidente");}
 	}
 	
@@ -104,15 +107,15 @@ public class MainApp {
 	}
 	
 	public static void main(String[] args) {
+	clientes = new Clientes(NUM_MAX_CLIENTES);		
 		try {Opcion opcion = null;
+
 			
 			while(opcion!=Opcion.SALIR) {opcion = Consola.elegirOpcion();ejecutarOpcion(opcion);}
 			if(opcion!=Opcion.SALIR) {System.out.println("nos vemos");}
 			
 		}
-		catch(Exception e) {e.printStackTrace();
-			
-		}
+		catch(Exception e) {e.printStackTrace();}
 		
 	}
 

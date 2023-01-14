@@ -82,7 +82,7 @@ public class Consola {
 				dni = Entrada.cadena();}
 				while(!dni.matches("[0-9]{7,8}[A-Z a-z]"));
 				
-			do {System.out.println("Introduzca un telefono correcto(numeros sin mas caracteres);");
+			do {System.out.println("Introduzca un telefono correcto(9 numeros sin mas caracteres);");
 				telefono = Entrada.cadena();}
 				while(!telefono.matches("^[0-9]{9}$"));
 				
